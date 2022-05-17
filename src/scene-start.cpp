@@ -407,7 +407,9 @@ void display(void) {
     // Set the view matrix. To start with this just moves the camera
     // backwards.  You'll need to add appropriate rotations.
 
-    view = Translate(0.0, 0.0, -viewDist);
+    view = Translate(0.0, 0.0, -viewDist)* RotateX(camRotUpAndOverDeg) * RotateY(camRotSidewaysDeg);
+
+    
 
     SceneObject lightObj1 = sceneObjs[1];
     vec4 lightPosition = view * lightObj1.loc;
@@ -415,7 +417,6 @@ void display(void) {
     glUniform4fv(glGetUniformLocation(shaderProgram, "LightPosition"),
                  1, lightPosition);
     CheckError();
-
     for (int i = 0; i < nObjects; i++) {
         SceneObject so = sceneObjs[i];
 
@@ -640,7 +641,7 @@ void reshape(int width, int height) {
     //         that the same part of the scene is visible across the width of
     //         the window.
 
-    GLfloat nearDist = 0.2;
+    GLfloat nearDist = 0.01;
     projection = Frustum(-nearDist * (float) width / (float) height,
                          nearDist * (float) width / (float) height,
                          -nearDist, nearDist,
