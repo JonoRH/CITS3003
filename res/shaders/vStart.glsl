@@ -30,22 +30,23 @@ void main()
     // Transform vertex normal into eye coordinates (assumes scaling
     // is uniform across dimensions)
     vec3 N = normalize( (ModelView*vec4(vNormal, 0.0)).xyz );
-
     // Compute terms in the illumination equation
     vec3 ambient = AmbientProduct;
     
     // Quadratic factor
-    float a = 1.0;
-    float b = 20.0;
-    float c = 30.0;
+    float a = 5.0;
+    float b = 0.8;
+    float c = 0.9;
     float distance = length(Lvec);
     float attenuation = 1.0/(a + b*distance + c * distance * distance);
+    //float attenuation = 1.0;
+
 
     float Kd = max( dot(L, N), 0.0 );
-    vec3  diffuse = attenuation * Kd*DiffuseProduct;
+    vec3  diffuse = Kd*DiffuseProduct;
 
     float Ks = pow( max(dot(N, H), 0.0), Shininess );
-    vec3  specular = attenuation * Ks * SpecularProduct;
+    vec3  specular = Ks * SpecularProduct;
     
     if (dot(L, N) < 0.0 ) {
 	specular = vec3(0.0, 0.0, 0.0);
@@ -53,7 +54,7 @@ void main()
 
     // globalAmbient is independent of distance from the light source
     vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
-    color.rgb = globalAmbient  + ambient + diffuse + specular;
+    color.rgb = globalAmbient  + (ambient + diffuse + specular) * attenuation;
     color.a = 1.0;
 
     gl_Position = Projection * ModelView * vpos;
