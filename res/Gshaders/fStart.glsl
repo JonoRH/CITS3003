@@ -34,7 +34,7 @@ void main()
       if (dot(L, N) < 0.0 ) {
 	specular = vec3(0.0, 0.0, 0.0);
     } 
-
+//TODO play with quadratic coefficients
     float distance = length(fL);
     float a = 1.0;
     float b = 0.8;

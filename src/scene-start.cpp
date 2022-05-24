@@ -71,6 +71,7 @@ typedef struct {
     int meshId;
     int texId;
     float texScale;
+    int exists; //if 0 no longer exists
 } SceneObject;
 
 const int maxObjects = 1024; // Scenes with more than 1024 objects seem unlikely
@@ -79,7 +80,6 @@ SceneObject sceneObjs[maxObjects]; // An array storing the objects currently in 
 int nObjects = 0;    // How many objects are currenly in the scene.
 int currObject = -1; // The current object
 int toolObj = -1;    // The object currently being modified
-
 //----------------------------------------------------------------------------
 //
 // Loads a texture by number, and binds it for later use.    
@@ -241,7 +241,7 @@ static void adjustLocXZ(vec2 xz) {
 static void adjustScaleY(vec2 sy) {
     sceneObjs[toolObj].scale += sy[0];
     sceneObjs[toolObj].loc[1] += sy[1];
-    cout << sy[0] <<  " 0x " << sy[1] << " 1x " << sy[2] << " 2x " <<  sy[3] << " 3x "; // PART X
+    //cout << sy[0] <<  " 0x " << sy[1] << " 1x " << sy[2] << " 2x " <<  sy[3] << " 3x "; // PART X
 }
 
 
@@ -256,7 +256,6 @@ static void doRotate() {
 }
 
 //------Add an object to the scene--------------------------------------------
-
 static void addObject(int id) {
 
     vec2 currPos = currMouseXYworld(camRotSidewaysDeg);
@@ -285,6 +284,7 @@ static void addObject(int id) {
     sceneObjs[nObjects].meshId = id;
     sceneObjs[nObjects].texId = rand() % numTextures;
     sceneObjs[nObjects].texScale = 2.0;
+    sceneObjs[nObjects].exists = 1;
 
     toolObj = currObject = nObjects++;
     setToolCallbacks(adjustLocXZ, camRotZ(),
@@ -292,6 +292,17 @@ static void addObject(int id) {
     glutPostRedisplay();
 }
 
+static void deleteObj(){
+    sceneObjs[currObject].exists = 0;
+    cout << currObject << "why \n";
+}
+
+static void duplicateObj(){
+    if (currObject <= 2) return; //dont copy lights or board
+    int newObj = nObjects++;
+    sceneObjs[newObj] = sceneObjs[currObject];
+    toolObj =  currObject = newObj;
+}
 //------The init function-----------------------------------------------------
 
 void init(void) {
@@ -436,7 +447,7 @@ void display(void) {
     CheckError();
     for (int i = 0; i < nObjects; i++) {
         SceneObject so = sceneObjs[i];
-
+        if (so.exists == 0) continue; //skip deleted objects
         vec3 rgb = so.rgb * lightObj1.rgb * so.brightness * lightObj1.brightness * 2.0;
         glUniform3fv(glGetUniformLocation(shaderProgram, "AmbientProduct"), 1, so.ambient * rgb);
         CheckError();
@@ -572,6 +583,24 @@ static void materialMenu(int id) {
         printf("Error in materialMenu\n");
     }
 }
+static void listMenu(int elmo){
+    deactivateTool();
+    if (currObject <3) return;
+    if (elmo == 101){ // previous Object
+        while(currObject > 3){//reach the bottom of the objects list //if it exists
+        currObject--; 
+        if (sceneObjs[currObject].exists == 1) break;
+        }
+    }
+    if (elmo == 102){ // Next Object
+        while(currObject < nObjects){//reach the top of the objects list
+        currObject++;
+        if (sceneObjs[currObject].exists == 1) break;
+        }
+    }
+    if (sceneObjs[currObject].exists == 0) return;
+    toolObj = currObject;
+}
 
 static void adjustAngleYX(vec2 angle_yx) {
     sceneObjs[currObject].angles[1] += angle_yx[0];
@@ -597,11 +626,17 @@ static void mainmenu(int id) {
         setToolCallbacks(adjustAngleYX, mat2(400, 0, 0, -400),
                          adjustAngleZTexscale, mat2(400, 0, 0, 15));
     }
+    if (id == 69) deleteObj();
+    if (id == 420) duplicateObj();
     if (id == 99) exit(0);
 }
 
 static void makeMenu() {
     int objectId = createArrayMenu(numMeshes, objectMenuEntries, objectMenu);
+    
+    int listMenuId = glutCreateMenu(listMenu);
+    glutAddMenuEntry("Previous Object",101);
+    glutAddMenuEntry("Next Object",102);
 
     int materialMenuId = glutCreateMenu(materialMenu);
     glutAddMenuEntry("R/G/B/All", 10);
@@ -625,6 +660,9 @@ static void makeMenu() {
     glutAddSubMenu("Texture", texMenuId);
     glutAddSubMenu("Ground Texture", groundMenuId);
     glutAddSubMenu("Lights", lightMenuId);
+    glutAddSubMenu("Object List", listMenuId);
+    glutAddMenuEntry("Delete",69);
+    glutAddMenuEntry("Duplicate",420);
     glutAddMenuEntry("EXIT", 99);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
