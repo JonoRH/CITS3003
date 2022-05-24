@@ -34,9 +34,9 @@ void main()
     vec3 ambient = AmbientProduct;
     
     // Quadratic factor
-    float a = 5.0;
-    float b = 0.8;
-    float c = 0.9;
+    float a = 0.0;
+    float b = 0.5;
+    float c = 1.5;
     float distance = length(Lvec);
     float attenuation = 1.0/(a + b*distance + c * distance * distance);
     //float attenuation = 1.0;
