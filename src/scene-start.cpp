@@ -313,10 +313,10 @@ void init(void) {
 
     // Load shaders and use the resulting shader program
     // PARTS A-F
-    shaderProgram = InitShader("res/shaders/vStart.glsl", "res/shaders/fStart.glsl");
+    //shaderProgram = InitShader("res/shaders/vStart.glsl", "res/shaders/fStart.glsl");
 
     // PARTS G-J
-    // shaderProgram = InitShader("res/Gshaders/vStart.glsl", "res/Gshaders/fStart.glsl");
+    shaderProgram = InitShader("res/Gshaders/vStart.glsl", "res/Gshaders/fStart.glsl");
 
     glUseProgram(shaderProgram);
     CheckError();
