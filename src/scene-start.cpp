@@ -241,7 +241,7 @@ static void adjustLocXZ(vec2 xz) {
 static void adjustScaleY(vec2 sy) {
     sceneObjs[toolObj].scale += sy[0];
     sceneObjs[toolObj].loc[1] += sy[1];
-    cout << sy[0] <<  " 0x " << sy[1] << " 1x " << sy[2] << " 2x " <<  sy[3] << " 3x ";
+    cout << sy[0] <<  " 0x " << sy[1] << " 1x " << sy[2] << " 2x " <<  sy[3] << " 3x "; // PART X
 }
 
 
@@ -312,7 +312,11 @@ void init(void) {
     CheckError(); // Allocate texture objects
 
     // Load shaders and use the resulting shader program
+    // PARTS A-F
     shaderProgram = InitShader("res/shaders/vStart.glsl", "res/shaders/fStart.glsl");
+
+    // PARTS G-J
+    // shaderProgram = InitShader("res/shaders/vStart.glsl", "res/shaders/fStart.glsl");
 
     glUseProgram(shaderProgram);
     CheckError();
@@ -407,6 +411,7 @@ void display(void) {
     // Set the view matrix. To start with this just moves the camera
     // backwards.  You'll need to add appropriate rotations.
 
+    // PART A
     view = Translate(0.0, 0.0, -viewDist)* RotateX(camRotUpAndOverDeg) * RotateY(camRotSidewaysDeg);
 
     
@@ -472,6 +477,20 @@ static void adjustBlueBrightness(vec2 bl_br) {
     sceneObjs[toolObj].brightness += bl_br[1];
 }
 
+// PART C
+static void adjustAmbientDiffuse(vec2 am_di) {
+    sceneObjs[toolObj].ambient += am_di[0];
+    sceneObjs[toolObj].diffuse += am_di[1];
+}
+
+static void adjustSpecularShine(vec2 sp_sh) {
+    sceneObjs[toolObj].specular += sp_sh[0];
+    //if (sceneObjs[toolObj].shine < 100) {
+    sceneObjs[toolObj].shine += sp_sh[1];
+    //}
+}
+
+
 static void lightMenu(int id) {
     deactivateTool();
     if (id == 70) {
@@ -518,7 +537,15 @@ static void materialMenu(int id) {
         setToolCallbacks(adjustRedGreen, mat2(1, 0, 0, 1),
                          adjustBlueBrightness, mat2(1, 0, 0, 1));
     }
+
+    //PART C
+    else if (id == 20) {
+        toolObj = currObject;
+        setToolCallbacks(adjustAmbientDiffuse, mat2(1.0, 0, 0, 1.0),
+                         adjustSpecularShine, mat2(10.0, 0, 0, 4.0));
+    }
         // You'll need to fill in the remaining menu items here.
+
     else {
         printf("Error in materialMenu\n");
     }
@@ -556,7 +583,7 @@ static void makeMenu() {
 
     int materialMenuId = glutCreateMenu(materialMenu);
     glutAddMenuEntry("R/G/B/All", 10);
-    glutAddMenuEntry("UNIMPLEMENTED: Ambient/Diffuse/Specular/Shine", 20);
+    glutAddMenuEntry("Ambient/Diffuse/Specular/Shine", 20);
 
     int texMenuId = createArrayMenu(numTextures, textureMenuEntries, texMenu);
     int groundMenuId = createArrayMenu(numTextures, textureMenuEntries, groundMenu);
