@@ -33,19 +33,12 @@ void main()
 
     // Compute terms in the illumination equation
     vec3 ambient = AmbientProduct;
-    
-    // Quadratic factor
-    float a = 1.0;
-    float b = 20.0;
-    float c = 30.0;
-    float distance = length(Lvec);
-    float attenuation = 1.0/(a + b*distance + c * distance * distance);
 
     float Kd = max( dot(L, N), 0.0 );
-    vec3  diffuse = attenuation * Kd*DiffuseProduct;
+    vec3  diffuse = Kd*DiffuseProduct;
 
     float Ks = pow( max(dot(N, H), 0.0), Shininess );
-    vec3  specular = attenuation * Ks * SpecularProduct;
+    vec3  specular = Ks * SpecularProduct;
     
     if (dot(L, N) < 0.0 ) {
 	specular = vec3(0.0, 0.0, 0.0);
