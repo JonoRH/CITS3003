@@ -640,12 +640,25 @@ void reshape(int width, int height) {
     //     - when the width is less than the height, the view should adjust so
     //         that the same part of the scene is visible across the width of
     //         the window.
+    // projection = Perspective(45.0f, (float)width/(float)height, 0.1f, 100.0f);
 
     GLfloat nearDist = 0.01;
-    projection = Frustum(-nearDist * (float) width / (float) height,
-                         nearDist * (float) width / (float) height,
-                         -nearDist, nearDist,
-                         nearDist, 100.0);
+    // projection = Frustum(-nearDist * (float) width / (float) height,
+    //                      nearDist * (float) width / (float) height,
+    //                      -nearDist, nearDist,
+    //                      nearDist, 100.0);
+
+    if (width > height) {
+        projection = Frustum(-nearDist*(float)width/(float)height,
+                            nearDist*(float)width/(float)height,
+                            -nearDist, nearDist, nearDist, 100.0);
+    }
+    else {
+        projection = Frustum(-nearDist,nearDist,
+                            -nearDist*(float)height/(float)width,
+                             nearDist*(float)height/(float)width,
+                             nearDist, 100.0);
+    }
 }
 
 //----------------------------------------------------------------------------
