@@ -33,12 +33,13 @@ void main()
     float distance = length(fL);
     float a = 1.0;
     float b = 0.8;
-    float c = 0.9;
+    float c = 3.2;
     float attenuation = 1.0/(a + b*distance + c * distance * distance);
     vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
-    gl_FragColor.rgb = globalAmbient + (ambient + diffuse + specular) * attenuation;
+    gl_FragColor.rgb = globalAmbient + (ambient + diffuse ) * attenuation;
     gl_FragColor.a = 1.0;
-    gl_FragColor = gl_FragColor * texture2D( texture, texCoord * texScale );
+    gl_FragColor = gl_FragColor * texture2D( texture, texCoord * texScale ) + vec4(attenuation * specular,1);
+    //adding specular component ontop of texture 
 
     // Initialize the vertex position attri
 }
