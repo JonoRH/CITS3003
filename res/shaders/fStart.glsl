@@ -6,4 +6,4 @@ uniform sampler2D texture;
 void main()
 {
     gl_FragColor = color * texture2D( texture, texCoord * texScale );
-}
+} //Part B Texture scale

@@ -291,7 +291,7 @@ static void addObject(int id) {
                      adjustScaleY, mat2(0.05, 0, 0, 10.0));
     glutPostRedisplay();
 }
-
+//PART J
 static void deleteObj(){
     sceneObjs[currObject].exists = 0;
     cout << currObject << "why \n";
@@ -442,7 +442,7 @@ void display(void) {
     // Second light
     SceneObject lightObj2 = sceneObjs[2];
     vec4 lightPosition2 = view * lightObj2.loc;
-
+    // PART J
     glUniform4fv(glGetUniformLocation(shaderProgram, "LightPosition"),
                  1, lightPosition);
     CheckError();

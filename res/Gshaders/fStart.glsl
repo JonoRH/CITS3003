@@ -46,7 +46,7 @@ void main()
     gl_FragColor.rgb = globalAmbient + (ambient + diffuse ) * attenuation;
     gl_FragColor.a = 1.0;
     gl_FragColor = gl_FragColor * texture2D( texture, texCoord * texScale ) + vec4(attenuation * specular,1);
-    //adding specular component ontop of texture 
+    //adding specular component ontop of texture PART H
 
     // Initialize the vertex position attributes
 }
