@@ -33,6 +33,7 @@ void main()
     // Compute terms in the illumination equation
     vec3 ambient = AmbientProduct;
     
+    // PART F
     // Quadratic factor
     float a = 0.0;
     float b = 0.5;
@@ -54,7 +55,7 @@ void main()
 
     // globalAmbient is independent of distance from the light source
     vec3 globalAmbient = vec3(0.1, 0.1, 0.1);
-    color.rgb = globalAmbient  + (ambient + diffuse + specular) * attenuation;
+    color.rgb = globalAmbient  + (ambient + diffuse + specular) * attenuation; // PART F
     color.a = 1.0;
 
     gl_Position = Projection * ModelView * vpos;

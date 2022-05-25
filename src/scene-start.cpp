@@ -284,7 +284,7 @@ static void addObject(int id) {
     sceneObjs[nObjects].meshId = id;
     sceneObjs[nObjects].texId = rand() % numTextures;
     sceneObjs[nObjects].texScale = 2.0;
-    sceneObjs[nObjects].exists = 1;
+    sceneObjs[nObjects].exists = 1; // PART J?
 
     toolObj = currObject = nObjects++;
     setToolCallbacks(adjustLocXZ, camRotZ(),
@@ -324,10 +324,10 @@ void init(void) {
 
     // Load shaders and use the resulting shader program
     // PARTS A-F
-    //shaderProgram = InitShader("res/shaders/vStart.glsl", "res/shaders/fStart.glsl");
+    shaderProgram = InitShader("res/shaders/vStart.glsl", "res/shaders/fStart.glsl");
 
     // PARTS G-J
-    shaderProgram = InitShader("res/Gshaders/vStart.glsl", "res/Gshaders/fStart.glsl");
+    // shaderProgram = InitShader("res/Gshaders/vStart.glsl", "res/Gshaders/fStart.glsl");
 
     glUseProgram(shaderProgram);
     CheckError();
@@ -396,7 +396,8 @@ void drawMesh(SceneObject sceneObj) {
 
     // Set the model matrix - this should combine translation, rotation and scaling based on what's
     // in the sceneObj structure (see near the top of the program).
-
+    // PART B
+    
     mat4 model = Translate(sceneObj.loc) * Scale(sceneObj.scale) * RotateX(sceneObj.angles[0]) * RotateY(sceneObj.angles[1]) * RotateZ(sceneObj.angles[2]);
 
 
@@ -508,9 +509,7 @@ static void adjustAmbientDiffuse(vec2 am_di) {
 
 static void adjustSpecularShine(vec2 sp_sh) {
     sceneObjs[toolObj].specular += sp_sh[0];
-    //if (sceneObjs[toolObj].shine < 100) {
     sceneObjs[toolObj].shine += sp_sh[1];
-    //}
 }
 
 
@@ -577,7 +576,6 @@ static void materialMenu(int id) {
         setToolCallbacks(adjustAmbientDiffuse, mat2(1.0, 0, 0, 1.0),
                          adjustSpecularShine, mat2(10.0, 0, 0, 4.0));
     }
-        // You'll need to fill in the remaining menu items here.
 
     else {
         printf("Error in materialMenu\n");
@@ -727,14 +725,11 @@ void reshape(int width, int height) {
     //     - when the width is less than the height, the view should adjust so
     //         that the same part of the scene is visible across the width of
     //         the window.
-    // projection = Perspective(45.0f, (float)width/(float)height, 0.1f, 100.0f);
 
+    // PART D
     GLfloat nearDist = 0.01;
-    // projection = Frustum(-nearDist * (float) width / (float) height,
-    //                      nearDist * (float) width / (float) height,
-    //                      -nearDist, nearDist,
-    //                      nearDist, 100.0);
 
+    // PART E
     if (width > height) {
         projection = Frustum(-nearDist*(float)width/(float)height,
                             nearDist*(float)width/(float)height,

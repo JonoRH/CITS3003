@@ -7,6 +7,8 @@ uniform sampler2D texture;
 uniform vec4 LightPosition2;
 uniform vec3 LightColor2;
 uniform float LightBrightness2;
+
+// PART G
 varying vec3 fN; //normal's eye  coordinates
 varying vec3 fV; //Vertex's eye coordinates
 varying vec3 fL; //Vector to the light from the vertex
@@ -34,7 +36,7 @@ void main()
       if (dot(L, N) < 0.0 ) {
 	specular = vec3(0.0, 0.0, 0.0);
     } 
-//TODO play with quadratic coefficients
+    //TODO play with quadratic coefficients
     float distance = length(fL);
     float a = 1.0;
     float b = 0.8;
@@ -46,5 +48,5 @@ void main()
     gl_FragColor = gl_FragColor * texture2D( texture, texCoord * texScale ) + vec4(attenuation * specular,1);
     //adding specular component ontop of texture 
 
-    // Initialize the vertex position attri
+    // Initialize the vertex position attributes
 }
